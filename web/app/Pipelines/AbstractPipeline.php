@@ -2,29 +2,27 @@
 
 namespace App\Pipelines;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Pipeline;
 use App\Traits\Methodable;
+use App\Contracts\PipelineProcessInterface;
 
 abstract class AbstractPipeline
 {
     use Methodable;
-
-    public function getMethods(): array
+    
+    public function __construct(
+        protected PipelineProcessInterface $process,
+        protected $tasks = [])
     {
-        $methods = [];
-        foreach ($this->getFilters() as $name => $value) {
-            if (method_exists($this, $name)) {
-                array_push($methods, [$this, $name]);
-            }
-        }
-        return $methods;
+        collect($this->getFilters())->each(function ($value, $name) {
+            if (method_exists($this, $name)) array_push($this->tasks, [$this, $name]);
+        });
     }
 
-    public function handle(Builder $builder): mixed
+    public function handle($builder)
     {
-        return Pipeline::send($builder)
-            ->through($this->getMethods())
-            ->thenReturn();
+        return $this->process->handle(
+            builder: $builder,
+            tasks: $this->tasks
+        );
     }
 }
