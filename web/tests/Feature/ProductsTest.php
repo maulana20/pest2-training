@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Arr;
+use App\Models\User;
 use App\Models\Product;
 
 beforeEach(function() {
@@ -27,4 +28,30 @@ it('multiple optional pipeline', function() {
     $this->get("/products/multi-pipeline?{$this->params}")
         ->assertStatus(200)
         ->assertSee($this->product->slug);
+});
+
+// source : https://coderadvise.com/laravel-pennant-package-feature-flag-tutorial
+
+it('list in condition subscribe', function() {
+    $user = User::factory()->create([
+        'name'          => 'subscribe example',
+        'email'         => 'subscribe@example.com',
+        'password'      => bcrypt('password'),
+        'is_subscriber' => 1,
+    ]);
+
+    $this->actingAs($user);
+    $this->get('/products/subscribe-list')->assertSuccessful();
+});
+
+it('list in condition unsubscribe', function() {
+    $user = User::factory()->create([
+        'name'          => 'unsubscribe example',
+        'email'         => 'unsubscribe@example.com',
+        'password'      => bcrypt('password'),
+        'is_subscriber' => 0,
+    ]);
+
+    $this->actingAs($user);
+    $this->get('/products/subscribe-list')->assertBadRequest();
 });

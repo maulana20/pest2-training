@@ -19,4 +19,10 @@ class ProductController extends Controller
         $products = Product::pipeline($pipeline)->get();
         return view('products.index', compact('products'));
     }
+
+    public function subscribeList()
+    {
+        $products = Product::get();
+        return view('products.index', compact('products'));
+    }
 }

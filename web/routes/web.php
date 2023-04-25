@@ -23,4 +23,8 @@ Route::resource('posts', PostController::class);
 Route::prefix('products')->group(function () {
     Route::get('multi-filter', [ProductController::class, 'multiFilter']);
     Route::get('multi-pipeline', [ProductController::class, 'multiPipeline']);
+    Route::get('subscribe-list', [ProductController::class, 'subscribeList'])->middleware([
+        'auth',
+        'features:course-management'
+    ]);
 });
