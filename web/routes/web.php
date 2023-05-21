@@ -19,14 +19,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('posts', PostController::class);
-Route::prefix('products')->group(function () {
-    Route::get('multi-filter', [ProductController::class, 'multiFilter']);
-    Route::get('multi-pipeline', [ProductController::class, 'multiPipeline']);
-    Route::get('subscribe-list', [ProductController::class, 'subscribeList'])->middleware([
+Route::group([
+    'prefix'     => 'posts',
+    'controller' => PostController::class
+], function ($router) {
+    Route::get('/', 'index');
+});
+
+Route::group([
+    'prefix'     => 'products',
+    'controller' => ProductController::class
+], function($router) {
+    Route::get('multi-filter', 'multiFilter');
+    Route::get('multi-pipeline', 'multiPipeline');
+    Route::get('subscribe-list', 'subscribeList')->middleware([
         'auth',
         'features:course-management'
     ]);
+    Route::get('api-custom-paginate', 'apiCustomPaginate');
 });
 
 Auth::routes(['verify' => true]);

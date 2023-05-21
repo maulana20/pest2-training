@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Filters\ProductFilter;
 use App\Pipelines\ProductPipeline;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
@@ -24,5 +25,11 @@ class ProductController extends Controller
     {
         $products = Product::get();
         return view('products.index', compact('products'));
+    }
+
+    public function apiCustomPaginate()
+    {
+        $products = Product::paginate();
+        return ProductResource::collection($products);
     }
 }

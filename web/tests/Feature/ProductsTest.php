@@ -55,3 +55,14 @@ it('list in condition unsubscribe', function() {
     $this->actingAs($user);
     $this->get('/products/subscribe-list')->assertBadRequest();
 });
+
+// source : https://github.com/laravel/framework/discussions/41513#discussioncomment-2383391
+
+it ('list api custom paginate', function() {
+    $this->get("/products/api-custom-paginate?page=2&per_page=15")
+        ->assertStatus(200)
+        ->assertJson([
+            "page"     => 2,
+            "per_page" => 15,
+        ]);
+});
