@@ -24,3 +24,15 @@ it('can set the cache control header for the response', function (): void {
     );
     expect($response->headers->get('Cache-Control'))->toEqual("no-cache, no-store, private");
 });
+
+it ('can not set the content security policy header for the response', function (): void {
+    $this->mock(ContentSecurityPolicy::class)
+        ->expects('handle')
+        ->andReturnUsing(function($request, \Closure $next) {
+            return $next($request);
+        });
+    $response = $this->get('/');
+    expect($response->headers->get('Content-Security-Policy'))->not->toMatchArray([
+        'content-security-policy' => 'Content-Security-Policy'
+    ]);
+});
