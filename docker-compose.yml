@@ -57,3 +57,14 @@ services:
       - db
     networks:
       - app-network
+  selenium:
+    image: selenium/standalone-chrome:4.3
+    volumes:
+      - /dev/shm:/dev/shm
+    environment:
+      - SE_START_VNC=false
+    ports:
+      - 4444:4444
+      - 7900:7900
+    networks:
+      - app-network
