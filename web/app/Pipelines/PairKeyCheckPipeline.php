@@ -25,7 +25,9 @@ class PairKeyCheckPipeline
         try {
             $publicKey = file_get_contents(dirname(__DIR__) . DIRECTORY_SEPARATOR . "/../pair.pub");
             return JWT::decode($token, new Key($publicKey, 'RS256'));
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+            throw new Exception("Failed decrypt token");
+        }
         return null;
     }
 }
