@@ -6,7 +6,7 @@ use App\Models\User;
 // source : https://jwt-auth.readthedocs.io/en/develop/laravel-installation
 
 beforeEach(function() {
-    $this->user        = User::factory()->create()->first();
+    $this->user        = User::factory()->create();
     $this->credentials = [
         "email"    => $this->user->email,
         "password" => "password"

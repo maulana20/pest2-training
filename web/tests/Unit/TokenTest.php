@@ -9,14 +9,14 @@ beforeEach(function() {
         'name'    => 'Maulana Saputra',
         'email'   => 'maulana.saputra@aqi.co.id',
         'feature' => 'api',
-        'exp'     => 1703983398
+        'exp'     => \Carbon\Carbon::now()->addMinute()->timestamp
     ];
 });
 
 it('check pair key', function () {
-    $encode = JWT::encode(['feature' => 'token'], file_get_contents(dirname(__DIR__) . DIRECTORY_SEPARATOR . "/../pair.sec"), 'RS256');
+    $encode = JWT::encode($this->data, file_get_contents(dirname(__DIR__) . DIRECTORY_SEPARATOR . "/../pair.sec"), 'RS256');
     $decode = JWT::decode($encode, new Key(file_get_contents(dirname(__DIR__) . DIRECTORY_SEPARATOR . "/../pair.pub"), 'RS256'));
-    $this->assertEquals($decode->feature, 'token');
+    $this->assertEquals($decode->feature, 'api');
 });
 
 it('check pair key with pipeline', function (): void {
